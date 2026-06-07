@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+
 data = PyPDFLoader("document loaders/deeplearning.pdf")
 docs = data.load()
 
