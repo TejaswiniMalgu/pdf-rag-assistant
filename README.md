@@ -11,39 +11,6 @@ A Retrieval-Augmented Generation (RAG) application that lets you chat with any P
 🎯 MMR (Maximal Marginal Relevance) retrieval for diverse, high-quality context
 
 
-🗂️ Project Structure
-pdf-rag-assistant/
-├── main.py               # CLI-based RAG chatbot
-├── app.py                # Streamlit web UI
-├── create_database.py    # Script to pre-build vector DB from a PDF
-├── requirements.txt      # Python dependencies
-├── .env                  # API keys (not committed)
-└── .gitignore
-
-⚙️ Tech Stack
-ComponentTool / LibraryLLMMistral AI (mistral-small-2506)EmbeddingsHuggingFace all-MiniLM-L6-v2 (free)Vector StoreChromaDBRAG FrameworkLangChainPDF ParsingPyPDFLoaderWeb UIStreamlit
-
-🚀 Getting Started
-1. Clone the repository
-bashgit clone https://github.com/TejaswiniMalgu/pdf-rag-assistant.git
-cd pdf-rag-assistant
-2. Create and activate a virtual environment
-bashpython -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# Mac/Linux
-source venv/bin/activate
-3. Install dependencies
-bashpip install -r requirements.txt
-4. Set up environment variables
-Create a .env file in the root directory:
-MISTRAL_API_KEY=your_mistral_api_key_here
-
-Get your free Mistral API key at console.mistral.ai
-
-
 🖥️ Usage
 Option A — Streamlit Web UI (Recommended)
 bashstreamlit run app.py
@@ -70,7 +37,7 @@ Enter 0 to exit
 
 The HuggingFace embedding model (~90MB) downloads automatically on first run
 The chroma_db/ folder is created locally and persists your vector store between sessions
-No OpenAI API key required — embeddings are fully free via HuggingFace
+embeddings are fully free via HuggingFace
 
 
 🔮 Future Improvements
