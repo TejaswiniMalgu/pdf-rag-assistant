@@ -6,14 +6,15 @@ langchain-huggingface
 mistralai
 
 streamlit
-chromadb
+chromadb==0.4.24
 faiss-cpu
 sentence-transformers
 
 pypdf
 python-docx
 
-
 python-dotenv
 
 requests
+
+protobuf==3.20.3
