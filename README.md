@@ -1,8 +1,8 @@
 # 📚 PDF RAG Assistant
 
-A Retrieval-Augmented Generation (RAG) application that lets you chat with any PDF document. Built with LangChain, Mistral AI, HuggingFace embeddings, and ChromaDB — with both a CLI interface and a Streamlit web UI.
+A Retrieval-Augmented Generation (RAG) application that lets you chat with any PDF document. Built with LangChain, Mistral AI, HuggingFace embeddings, and ChromaDB (local) / FAISS (cloud) — with both a CLI interface and a Streamlit web UI.
 
-Live here: https://pdf-rag-assistant.streamlit.app/
+Live here : https://pdf-rag-assistant.streamlit.app/
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
 ![LangChain](https://img.shields.io/badge/LangChain-🦜-green)
@@ -23,7 +23,7 @@ Live here: https://pdf-rag-assistant.streamlit.app/
 - 📄 Upload any PDF and ask questions from it
 - 🔍 Semantic search using HuggingFace `all-MiniLM-L6-v2` embeddings (free, no API key needed)
 - 🧠 Answers powered by Mistral AI (`mistral-small-2506`)
-- 💾 Persistent vector store using ChromaDB
+- 💾 ChromaDB locally / FAISS on Streamlit Cloud — controlled by one environment variable
 - 🖥️ Two ways to use: CLI or Streamlit web app
 - 🎯 MMR (Maximal Marginal Relevance) retrieval for diverse, high-quality context
 
@@ -34,15 +34,15 @@ Live here: https://pdf-rag-assistant.streamlit.app/
 ```
 pdf-rag-assistant/
 ├── document loaders/       # Place your PDF files here (for CLI usage)
-├── app.py                  # Streamlit web UI
-├── create_database.py      # Loads PDF, creates ChromaDB vector store
+├── app.py                  # Streamlit web UI (auto-switches vector store)
+├── create_database.py      # Loads PDF, creates ChromaDB vector store (CLI)
 ├── main.py                 # CLI chatbot
 ├── requirements.txt        # Python dependencies
 ├── runtime.txt             # Pins Python 3.11 for Streamlit Cloud
 └── .gitignore
 ```
 
-> `chroma_db/` and `venv/` are created locally and are git-ignored.
+> `chroma_db/`, `faiss_index/` and `venv/` are created locally and are git-ignored.
 
 ---
 
@@ -115,19 +115,36 @@ python main.py
 
 1. Push this repo to GitHub
 2. Go to [share.streamlit.io](https://share.streamlit.io) and connect your repo
-3. Add your `MISTRAL_API_KEY` under **App Settings → Secrets**
-4. Deploy — the `runtime.txt` file pins **Python 3.11** automatically
+3. Add the following under **App Settings → Secrets**:
 
-> ⚠️ **Note:** Streamlit Cloud defaults to Python 3.14 which breaks ChromaDB's `protobuf` dependency. The included `runtime.txt` (set to `python-3.11`) fixes this — no code changes needed.
+```toml
+MISTRAL_API_KEY = "your_mistral_api_key_here"
+USE_FAISS = "true"
+```
+
+4. Deploy — done!
+
+---
+
+## 🔀 Dual Vector Store — ChromaDB vs FAISS
+
+This app uses a single environment variable `USE_FAISS` to switch vector stores automatically:
+
+| Environment | `USE_FAISS` | Vector Store | Persists |
+|---|---|---|---|
+| Local | not set / `false` | ChromaDB (`chroma_db/`) | ✅ Yes |
+| Streamlit Cloud | `true` (set in Secrets) | FAISS (`faiss_index/`) | ✅ Yes |
+
+> ChromaDB has a `protobuf`/`grpc` dependency conflict on Streamlit Cloud's shared environment. FAISS is used there instead — same retrieval quality, zero cloud headaches. Locally, ChromaDB works perfectly and persists between sessions.
 
 ---
 
 ## 📝 Notes
 
 - The HuggingFace embedding model (~90MB) downloads automatically on first run
-- The `chroma_db/` folder is created locally and persists your vector store between sessions
 - Embeddings are completely **free** via HuggingFace — no API key needed
 - Only the Mistral AI key is required
+- `chroma_db/` (local) and `faiss_index/` (cloud) both persist your vector store between sessions
 
 ---
 
@@ -146,3 +163,4 @@ python main.py
 - [Mistral AI](https://mistral.ai/)
 - [HuggingFace Sentence Transformers](https://huggingface.co/sentence-transformers)
 - [ChromaDB](https://www.trychroma.com/)
+- [FAISS](https://github.com/facebookresearch/faiss)
